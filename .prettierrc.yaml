@@ -1,0 +1,6 @@
+singleQuote: true
+dobuleQuote: true
+endOfLine: auto
+semi: false
+printWidth: 100
+trailingComma: none
