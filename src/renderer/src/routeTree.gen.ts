@@ -8,162 +8,117 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as StudioRouteImport } from './routes/_studio'
+import { Route as NeoRouteImport } from './routes/_neo'
+import { Route as NeoIndexRouteImport } from './routes/_neo/index'
+import { Route as StudioStudioRouteImport } from './routes/_studio/studio'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as DashboardLayoutImport } from './routes/dashboard/layout'
-import { Route as IndexImport } from './routes/index'
-import { Route as SettingsIndexImport } from './routes/settings/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
-
-// Create/Update Routes
-
-const DashboardLayoutRoute = DashboardLayoutImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRoute,
+const StudioRoute = StudioRouteImport.update({
+  id: '/_studio',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const NeoRoute = NeoRouteImport.update({
+  id: '/_neo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeoIndexRoute = NeoIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => NeoRoute,
+} as any)
+const StudioStudioRoute = StudioStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => StudioRoute,
 } as any)
 
-const SettingsIndexRoute = SettingsIndexImport.update({
-  id: '/settings/',
-  path: '/settings/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardIndexRoute = DashboardIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardLayoutRoute,
-} as any)
-
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/studio': typeof StudioStudioRoute
+  '/': typeof NeoIndexRoute
+}
+export interface FileRoutesByTo {
+  '/studio': typeof StudioStudioRoute
+  '/': typeof NeoIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_neo': typeof NeoRouteWithChildren
+  '/_studio': typeof StudioRouteWithChildren
+  '/_studio/studio': typeof StudioStudioRoute
+  '/_neo/': typeof NeoIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/studio' | '/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/studio' | '/'
+  id: '__root__' | '/_neo' | '/_studio' | '/_studio/studio' | '/_neo/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  NeoRoute: typeof NeoRouteWithChildren
+  StudioRoute: typeof StudioRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_studio': {
+      id: '/_studio'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_neo': {
+      id: '/_neo'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof NeoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_neo/': {
+      id: '/_neo/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof NeoIndexRouteImport
+      parentRoute: typeof NeoRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardLayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof DashboardLayoutImport
-    }
-    '/settings/': {
-      id: '/settings/'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsIndexImport
-      parentRoute: typeof rootRoute
+    '/_studio/studio': {
+      id: '/_studio/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioStudioRouteImport
+      parentRoute: typeof StudioRoute
     }
   }
 }
 
-// Create and export the route tree
-
-interface DashboardLayoutRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute
+interface NeoRouteChildren {
+  NeoIndexRoute: typeof NeoIndexRoute
 }
 
-const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
-  DashboardIndexRoute: DashboardIndexRoute,
+const NeoRouteChildren: NeoRouteChildren = {
+  NeoIndexRoute: NeoIndexRoute,
 }
 
-const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
-  DashboardLayoutRouteChildren,
-)
+const NeoRouteWithChildren = NeoRoute._addFileChildren(NeoRouteChildren)
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardLayoutRouteWithChildren
-  '/dashboard/': typeof DashboardIndexRoute
-  '/settings': typeof SettingsIndexRoute
+interface StudioRouteChildren {
+  StudioStudioRoute: typeof StudioStudioRoute
 }
 
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/settings': typeof SettingsIndexRoute
+const StudioRouteChildren: StudioRouteChildren = {
+  StudioStudioRoute: StudioStudioRoute,
 }
 
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardLayoutRouteWithChildren
-  '/dashboard/': typeof DashboardIndexRoute
-  '/settings/': typeof SettingsIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/dashboard/' | '/settings'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/settings'
-  id: '__root__' | '/' | '/dashboard' | '/dashboard/' | '/settings/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardLayoutRoute: typeof DashboardLayoutRouteWithChildren
-  SettingsIndexRoute: typeof SettingsIndexRoute
-}
+const StudioRouteWithChildren =
+  StudioRoute._addFileChildren(StudioRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardLayoutRoute: DashboardLayoutRouteWithChildren,
-  SettingsIndexRoute: SettingsIndexRoute,
+  NeoRoute: NeoRouteWithChildren,
+  StudioRoute: StudioRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/dashboard",
-        "/settings/"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/dashboard": {
-      "filePath": "dashboard/layout.tsx",
-      "children": [
-        "/dashboard/"
-      ]
-    },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx",
-      "parent": "/dashboard"
-    },
-    "/settings/": {
-      "filePath": "settings/index.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
