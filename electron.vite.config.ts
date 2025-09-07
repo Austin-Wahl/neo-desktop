@@ -13,13 +13,17 @@ export default defineConfig({
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@src': resolve('src')
       }
     },
     plugins: [
       tanstackRouter({
         autoCodeSplitting: true,
-        routeToken: 'layout'
+        routeToken: 'layout',
+        target: 'react',
+        generatedRouteTree: './src/renderer/src/routeTree.gen.ts',
+        routesDirectory: './src/renderer/src/routes'
       }),
       tailwindcss(),
       react()
