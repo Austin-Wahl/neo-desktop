@@ -1,9 +1,8 @@
-import { contextBridge, ipcRenderer, shell } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { ElectronCustomAPI, NeoAPI } from './types'
-import z from 'zod'
 import { createDatabaseConnectionSchema } from '@src/validation-schemas/connection'
-import { UserPreferences } from '@src/main/store'
+import { contextBridge, ipcRenderer, shell } from 'electron'
+import z from 'zod'
+import { ElectronCustomAPI, NeoAPI } from './types'
 
 // Custom APIs for renderer
 const api: ElectronCustomAPI = {
@@ -20,7 +19,7 @@ const api: ElectronCustomAPI = {
   getPreference: () => ipcRenderer.invoke('get-preference'),
   getSystemTheme: () => ipcRenderer.invoke('get-system-theme'),
   onSystemThemeChanged: (callback: (theme: 'light' | 'dark') => void) => {
-    ipcRenderer.on('system-theme-changed', (event, theme) => callback(theme))
+    ipcRenderer.on('system-theme-changed', (_event, theme) => callback(theme))
   },
   setPreference: (key, value) => ipcRenderer.invoke('set-preference', key, value)
 }

@@ -154,7 +154,7 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.handle('get-preference', (event, key: keyof UserPreferences) => {
+ipcMain.handle('get-preference', (_event, key: keyof UserPreferences) => {
   return getPreference(key)
 })
 
