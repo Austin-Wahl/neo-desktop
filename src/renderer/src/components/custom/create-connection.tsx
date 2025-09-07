@@ -86,8 +86,7 @@ interface CreateConnectionFormProps {
 
 const CreateConnection = ({
   trigger,
-  asChild,
-  projectId
+  asChild
 }: {
   trigger?: ReactNode
   asChild?: boolean

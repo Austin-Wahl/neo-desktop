@@ -5,6 +5,8 @@
     "moduleResolution": "bundler",
     "composite": true,
     "types": ["electron-vite/node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "baseUrl": ".",
     "paths": {
        "@src/*": [
