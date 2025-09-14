@@ -24,7 +24,7 @@ export interface ElectronCustomAPI {
   maximize()
   close()
   restore()
-  getWindowState: () => Promise<>
+  getWindowState: () => Promise<WindowState>
   onWindowStateChange: (callback: (state: WindowState) => void) => void
   zoomIn()
   zoomOut()

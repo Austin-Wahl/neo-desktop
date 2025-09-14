@@ -1,9 +1,9 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { getPreference, getSystemTheme, setPreference, UserPreferences } from './store'
-
+import './application-menu-mac'
 let mainWindow: BrowserWindow | undefined = undefined
 
 function createWindow(): void {
@@ -21,6 +21,10 @@ function createWindow(): void {
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false
+    },
+    trafficLightPosition: {
+      x: 12,
+      y: 12
     },
     // ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
     icon: join(__dirname, '../../resources/icon.png'),

@@ -11,6 +11,8 @@ import {
   SidebarMenuItem
 } from '@renderer/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
+import { useCallback, useEffect, useState } from 'react'
+import useUtils from '@renderer/hooks/use-utils'
 // Menu items.
 const items = [
   {
@@ -36,8 +38,13 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const { fullHeight } = useUtils()
+
   return (
-    <Sidebar className="!h-[calc(100%-40px)] top-[40px]" collapsible="icon">
+    <Sidebar
+      className={fullHeight ? 'h-full top-0' : '!h-[calc(100%-40px)] top-[40px]'}
+      collapsible="icon"
+    >
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>

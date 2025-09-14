@@ -22,7 +22,14 @@ const items = [
 
 export function StudioSidebar() {
   return (
-    <Sidebar className="!h-[calc(100%-40px)] top-[40px]" collapsible="icon">
+    <Sidebar
+      className={
+        window.electron.process.platform === 'darwin'
+          ? '!h-[calc(100%-20px)] top-[20px]'
+          : '!h-[calc(100%-40px)] top-[40px]'
+      }
+      collapsible="icon"
+    >
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Studio</SidebarGroupLabel>

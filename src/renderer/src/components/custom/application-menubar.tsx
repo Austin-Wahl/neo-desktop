@@ -19,6 +19,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger
 } from '@renderer/components/ui/menubar'
+import useUtils from '@renderer/hooks/use-utils'
 // import { webFrame } from 'electron'
 import {
   Maximize,
@@ -36,6 +37,19 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
 const ApplicationMenubar = () => {
+  const { fullHeight } = useUtils()
+
+  if (fullHeight) {
+    return null
+  }
+
+  if (window.electron.process.platform)
+    return (
+      <div
+        className="fixed w-full h-[40px] bg-background z-[1000] top-0 left-0 flex border-b-2 justify-between items-center"
+        style={{ appRegion: 'drag' } as React.CSSProperties & { [key: string]: any }}
+      ></div>
+    )
   return (
     <div
       className="fixed w-full h-[40px] bg-background z-[1000] top-0 left-0 flex border-b-2 justify-between items-center"
@@ -46,6 +60,7 @@ const ApplicationMenubar = () => {
         <div className="select-none mr-3">
           <p className="text-lg">
             <span className="font-bold">NEO</span> | <span className="font-extralight">Studio</span>
+            <span className="font-bold"></span>
           </p>
         </div>
         <div className="w-[2px] h-[32px] bg-border"></div>
