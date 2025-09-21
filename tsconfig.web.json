@@ -5,8 +5,8 @@
     "src/renderer/src/**/*",
     "src/renderer/src/**/*.tsx",
     "src/preload/*.d.ts",
-    "src/validation-schemas/**/*.ts"
-, "src/preload/index.ts", "src/preload/types.ts"  ],
+    "src/validation-schemas/**/*.ts",
+    "src/validation-schemas/**/*.ts", "src/preload/index.ts", "src/preload/types.ts"  ],
   "compilerOptions": {
     "composite": true,
     "noUnusedLocals": false,

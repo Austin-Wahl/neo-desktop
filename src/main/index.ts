@@ -4,6 +4,7 @@ import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { getPreference, getSystemTheme, setPreference, UserPreferences } from './store'
 import './application-menu-mac'
+import { initializeLogger, log } from '@src/main/services/logging/logger'
 
 let mainWindow: BrowserWindow | undefined = undefined
 
@@ -155,6 +156,23 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('ready', async () => {
+  const loggerPath = await initializeLogger() // Await the initialization
+  if (loggerPath) {
+    await log({
+      message: `Logger initialized. Path: ${loggerPath}`,
+      process: 'Node',
+      level: 'INFO'
+    })
+  } else {
+    console.error('Logger failed to initialize. File logging will not occur.')
+    // Handle this gracefully: maybe fall back to console logging only
+  }
+
+  // Now you can safely call log() knowing the file exists (if initialization succeeded)
+  await log({ message: 'Application is ready!', process: 'Node', level: 'INFO' })
 })
 
 // In this file you can include the rest of your app's specific main process

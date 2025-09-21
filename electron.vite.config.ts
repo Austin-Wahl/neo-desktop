@@ -5,7 +5,12 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import { resolve } from 'path'
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@src': resolve('src')
+      }
+    }
   },
   preload: {
     plugins: [externalizeDepsPlugin()]
