@@ -1,5 +1,6 @@
 {
   "name": "neo",
+  "productName": "Neo",
   "version": "1.0.0",
   "type": "module",
   "description": "A modern, adaptable SQL query tool.",

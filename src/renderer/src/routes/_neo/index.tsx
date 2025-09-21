@@ -9,6 +9,8 @@ import {
 } from '@renderer/components/ui/card'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
+import waves from '@renderer/assets/simple-waves.svg'
+import banner from '@renderer/assets/simple-banner.svg'
 
 export const Route = createFileRoute('/_neo/')({
   component: RouteComponent
@@ -28,7 +30,7 @@ function RouteComponent() {
           </p>
         </div>
         <img
-          src="/src/assets/simple-banner.svg"
+          src={banner}
           className="object-cover rounded-md w-full aspect-[16/4] h-full absolute top-0 left-0 z-[0] brightness-75"
         />
       </div>
@@ -94,7 +96,7 @@ function RouteComponent() {
           </div>
           <img
             className="w-full object-fill absolute top-1/2 left-0 -translate-y-1/2"
-            src="/src/assets/simple-waves.svg"
+            src={waves}
           />
         </div>
       </div>

@@ -8,6 +8,88 @@
 import { MenuItemConstructorOptions } from 'electron'
 import { app, Menu } from 'electron/main'
 
+const queryMenu: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: 'Query',
+    submenu: [
+      {
+        label: 'New Query',
+        toolTip: 'Opens a new SQL editor'
+      }
+    ]
+  }
+]
+
+const resultMenu: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: 'Results',
+    submenu: [
+      {
+        label: 'Open Results',
+        toolTip: 'Opens the results from the current query window'
+      },
+      {
+        label: 'Populate in Editor',
+        toolTip: 'Populates the query ran in an Editor'
+      }
+    ]
+  }
+]
+
+const projectMenu: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: 'Project',
+    submenu: [
+      {
+        label: 'New Project',
+        toolTip: 'Create a new Project'
+      }
+    ]
+  }
+]
+
+const viewMenu: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: 'View',
+    submenu: [
+      {
+        label: 'Open Subviews',
+        submenu: [
+          {
+            label: 'New Editor',
+            toolTip: 'Opens a new SQL editor'
+          },
+          {
+            label: 'Results',
+            toolTip: 'Opens an empty Results window'
+          },
+          {
+            label: 'Scratchpad',
+            toolTip: 'Opens an empty scratchpad'
+          },
+          ...(import.meta.env.DEV
+            ? [
+                {
+                  label: 'Debug',
+                  toolTip: 'Opens Debugger Panel'
+                }
+              ]
+            : [])
+        ]
+      },
+      { type: 'separator' },
+      { role: 'reload' },
+      { role: 'forceReload' },
+      { role: 'toggleDevTools' },
+      { type: 'separator' },
+      { role: 'resetZoom' },
+      { role: 'zoomIn' },
+      { role: 'zoomOut' },
+      { type: 'separator' },
+      { role: 'togglefullscreen' }
+    ]
+  }
+]
 const isMac = process.platform === 'darwin'
 const template = [
   // { role: 'appMenu' }
@@ -56,21 +138,10 @@ const template = [
         : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }])
     ]
   },
-  // { role: 'viewMenu' }
-  {
-    label: 'View',
-    submenu: [
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
-  },
+  ...queryMenu,
+  ...resultMenu,
+  ...projectMenu,
+  ...viewMenu,
   // { role: 'windowMenu' }
   {
     label: 'Window',

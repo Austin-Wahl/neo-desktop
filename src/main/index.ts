@@ -4,7 +4,10 @@ import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { getPreference, getSystemTheme, setPreference, UserPreferences } from './store'
 import './application-menu-mac'
+
 let mainWindow: BrowserWindow | undefined = undefined
+
+app.name = 'Neo'
 
 function createWindow(): void {
   // Create the browser window.
@@ -126,7 +129,6 @@ function sendState() {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.neo.studio')
-
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
