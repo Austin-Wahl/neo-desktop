@@ -3,6 +3,7 @@ import { createDatabaseConnectionSchema } from '@src/validation-schemas/connecti
 import { contextBridge, ipcRenderer, shell } from 'electron'
 import z from 'zod'
 import { ElectronCustomAPI, NeoAPI } from './types'
+import { LoggingObject } from '@src/types/logging'
 
 // Custom APIs for renderer
 const api: ElectronCustomAPI = {
@@ -21,7 +22,17 @@ const api: ElectronCustomAPI = {
   onSystemThemeChanged: (callback: (theme: 'light' | 'dark') => void) => {
     ipcRenderer.on('system-theme-changed', (_event, theme) => callback(theme))
   },
-  setPreference: (key, value) => ipcRenderer.invoke('set-preference', key, value)
+  setPreference: (key, value) => ipcRenderer.invoke('set-preference', key, value),
+  onAppReady: (callback: () => void) => {
+    ipcRenderer.removeAllListeners('app-ready')
+    ipcRenderer.on('app-ready', callback)
+  },
+  signalRendererReady: () => {
+    ipcRenderer.send('renderer-ready')
+  },
+  log: async (logObject: Omit<LoggingObject, 'process'>) => {
+    ipcRenderer.invoke('log', logObject)
+  }
 }
 
 const neoApi: NeoAPI = {

@@ -5,8 +5,10 @@ import icon from '../../resources/icon.png?asset'
 import { getPreference, getSystemTheme, setPreference, UserPreferences } from './store'
 import './application-menu-mac'
 import { initializeLogger, log } from '@src/main/services/logging/logger'
+import { LoggingObject } from '@src/types/logging'
 
 let mainWindow: BrowserWindow | undefined = undefined
+let rendererIsReadyForIpc = false
 
 app.name = 'Neo'
 
@@ -36,8 +38,10 @@ function createWindow(): void {
     frame: false
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow!.show()
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.show()
+    }
   })
 
   mainWindow!.on('enter-full-screen', sendState)
@@ -168,12 +172,44 @@ app.on('ready', async () => {
     })
   } else {
     console.error('Logger failed to initialize. File logging will not occur.')
-    // Handle this gracefully: maybe fall back to console logging only
   }
 
-  // Now you can safely call log() knowing the file exists (if initialization succeeded)
   await log({ message: 'Application is ready!', process: 'Node', level: 'INFO' })
+
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  mainProcessInitComplete = true
+
+  maybeSendAppReady()
 })
+
+ipcMain.on('renderer-ready', () => {
+  rendererIsReadyForIpc = true
+  maybeSendAppReady()
+})
+
+ipcMain.handle('log', async (_event, logObject: Omit<LoggingObject, 'process'>) => {
+  await log({
+    ...logObject,
+    process: 'Renderer'
+  } as LoggingObject)
+})
+
+let mainProcessInitComplete = false
+async function maybeSendAppReady(): Promise<void> {
+  if (mainWindow && !mainWindow.isDestroyed() && mainProcessInitComplete && rendererIsReadyForIpc) {
+    mainWindow.webContents.send('app-ready')
+    await log({
+      level: 'INFO',
+      message: 'Application Init Process Complete. Loading Home.',
+      process: 'Node'
+    })
+  } else {
+    const logMsg =
+      `Main: Waiting conditions for "app-ready" send: ` +
+      `Window:${!!mainWindow} MainInit:${mainProcessInitComplete} RendererReady:${rendererIsReadyForIpc}`
+    await log({ level: 'INFO', message: logMsg, process: 'Node' })
+  }
+}
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

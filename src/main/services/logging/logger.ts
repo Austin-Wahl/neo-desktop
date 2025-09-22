@@ -82,5 +82,4 @@ const log = async (loggingObject: LoggingObject): Promise<boolean> => {
     return Promise.resolve(false)
   }
 }
-
 export { log, initializeLogger }

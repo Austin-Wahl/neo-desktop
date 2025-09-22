@@ -1,4 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { LoggingObject } from '@src/types/logging'
 import { createDatabaseConnectionSchema } from '@src/validation-schemas/connection'
 import z from 'zod'
 
@@ -37,4 +38,17 @@ export interface ElectronCustomAPI {
   ) => Promise<void>
   getSystemTheme: () => Promise<'light' | 'dark'>
   onSystemThemeChanged: (callback: (theme: 'light' | 'dark') => void) => void
+  onAppReady: (callback: () => void) => void
+  signalRendererReady: () => void
+  log: (
+    logObject:
+      | {
+          level: 'ERROR'
+          error: Error
+        }
+      | {
+          level: 'WARN' | 'INFO'
+          message: string
+        }
+  ) => Promise<void>
 }

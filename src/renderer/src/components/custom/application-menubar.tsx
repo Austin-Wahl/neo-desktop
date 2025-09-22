@@ -1,12 +1,4 @@
-import { Button } from '@renderer/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@renderer/components/ui/dialog'
+import WindowControls from '@renderer/components/custom/window-controls'
 import {
   Menubar,
   MenubarContent,
@@ -21,29 +13,18 @@ import {
 } from '@renderer/components/ui/menubar'
 import useUtils from '@renderer/hooks/use-utils'
 // import { webFrame } from 'electron'
-import {
-  Maximize,
-  Minimize,
-  Minus,
-  Monitor,
-  Moon,
-  Palette,
-  Plus,
-  RotateCcw,
-  Sun,
-  X
-} from 'lucide-react'
+import { Minus, Monitor, Moon, Palette, Plus, RotateCcw, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
 
 const ApplicationMenubar = () => {
   const { fullHeight } = useUtils()
 
+  // Only applies to Mac OS
   if (fullHeight) {
     return null
   }
 
-  if (window.electron.process.platform)
+  if (window.electron.process.platform === 'darwin')
     return (
       <div
         className="fixed w-full h-[40px] bg-background z-[1000] top-0 left-0 flex border-b-2 justify-between items-center"
@@ -223,90 +204,6 @@ const ViewDropdown = () => {
         </MenubarSub>
       </MenubarContent>
     </MenubarMenu>
-  )
-}
-const WindowControls = () => {
-  const [isFullScreen, setIsFullScreen] = useState(false)
-  const [confirmCloseDialogOpen, setConfirmCloseDialogOpen] = useState(false)
-  useEffect(() => {
-    window.api.getWindowState().then((state) => {
-      setIsFullScreen(state.isMaximized)
-    })
-
-    window.api.onWindowStateChange((state: WindowState) => {
-      setIsFullScreen(state.isMaximized)
-    })
-  }, [])
-
-  return (
-    <>
-      <div
-        className="flex"
-        style={{ appRegion: 'no-drag' } as React.CSSProperties & { [key: string]: any }}
-      >
-        <button
-          className="w-[60px] h-[40px] flex items-center justify-center transition-all duration-100 hover:bg-secondary"
-          onClick={() => {
-            window.api.minimize()
-          }}
-        >
-          <Minus className="w-[16px]" />
-        </button>
-
-        {isFullScreen ? (
-          <button
-            className="w-[60px] h-[40px] flex items-center justify-center transition-all duration-100 hover:bg-secondary"
-            onClick={() => {
-              window.api.restore()
-            }}
-          >
-            <Minimize className="!w-[16px]" />
-          </button>
-        ) : (
-          <button
-            className="w-[60px] h-[40px] flex items-center justify-center transition-all duration-100 hover:bg-secondary"
-            onClick={() => {
-              window.api.maximize()
-            }}
-          >
-            <Maximize className="!w-[16px]" />
-          </button>
-        )}
-
-        <button
-          className="w-[60px] h-[40px] flex items-center justify-center transition-all duration-100 hover:bg-red-400"
-          onClick={() => {
-            setConfirmCloseDialogOpen(true)
-          }}
-        >
-          <X className="w-[16px]" />
-        </button>
-      </div>
-      <Dialog open={confirmCloseDialogOpen} onOpenChange={setConfirmCloseDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>Are you sure you want to exit Neo?</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              onClick={() => setConfirmCloseDialogOpen(false)}
-              className="cursor-pointer"
-              variant={'secondary'}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => window.api.close()}
-              className="cursor-pointer"
-              variant={'destructive'}
-            >
-              Exit
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
   )
 }
 
