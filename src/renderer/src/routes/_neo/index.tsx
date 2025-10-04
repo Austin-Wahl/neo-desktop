@@ -1,4 +1,7 @@
+import banner from '@renderer/assets/grid.svg'
+import waves from '@renderer/assets/simple-waves.svg'
 import CreateConnection from '@renderer/components/custom/create-connection'
+import ProjectCreateForm from '@renderer/components/custom/project-create-form'
 import { Button } from '@renderer/components/ui/button'
 import {
   Card,
@@ -7,22 +10,26 @@ import {
   CardHeader,
   CardTitle
 } from '@renderer/components/ui/card'
+import { Project } from '@src/types/types'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
-import waves from '@renderer/assets/simple-waves.svg'
-import banner from '@renderer/assets/simple-banner.svg'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/_neo/')({
   component: RouteComponent
 })
 
 function RouteComponent() {
+  const [createProjectDialogOpen, setCreateProjectDialogOpen] = useState(false)
+
+  function handleProjectCreation(project: Project) {}
+
   return (
     <div className="w-full p-4 container ml-auto mr-auto flex gap-8 flex-col">
-      <div className="w-full relative min-h-[300px]">
+      <div className="w-full relative min-h-[300px] border-2 rounded-lg">
         <div className="w-full h-full absolute top-0 left-0 z-[10] p-4 flex flex-col gap-4 pt-8 px-16">
           <p className="text-white text-5xl">Welcome to Neo.</p>
-          <p className="text-white text-xl max-w-[700px] italic">
+          <p className="text-white max-w-[700px] italic">
             Neo is a modern solution for database-driven workflows, built around a simple
             “point-and-click” philosophy. Designed for both developers and clients, Neo makes
             complex tasks intuitive and accessible, empowering anyone to work with data
@@ -31,7 +38,7 @@ function RouteComponent() {
         </div>
         <img
           src={banner}
-          className="object-cover rounded-md w-full aspect-[16/4] h-full absolute top-0 left-0 z-[0] brightness-75"
+          className="object-cover rounded-md w-full h-full absolute top-0 left-0 z-[0] brightness-200 "
         />
       </div>
       <div className="w-full flex flex-col gap-4">
@@ -59,7 +66,7 @@ function RouteComponent() {
               <CardDescription>Easily organize database connections with Projects.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button>
+              <Button className="cursor-pointer" onClick={() => setCreateProjectDialogOpen(true)}>
                 <Plus />
                 Create
               </Button>
@@ -100,6 +107,11 @@ function RouteComponent() {
           />
         </div>
       </div>
+      <ProjectCreateForm
+        onCreate={handleProjectCreation}
+        showProjectCreateForm={createProjectDialogOpen}
+        setShowProjectCreateForm={setCreateProjectDialogOpen}
+      />
     </div>
   )
 }

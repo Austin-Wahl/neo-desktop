@@ -1,6 +1,5 @@
 import grid from '@renderer/assets/grid.svg'
 import useUtils from '@renderer/hooks/use-utils'
-import { log } from '@src/main/services/logging/logger'
 import { ReactNode, useEffect, useState } from 'react'
 
 const Loading = ({ children }: { children: ReactNode }) => {

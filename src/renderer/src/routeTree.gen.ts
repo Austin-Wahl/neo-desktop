@@ -13,6 +13,7 @@ import { Route as StudioRouteImport } from './routes/_studio'
 import { Route as NeoRouteImport } from './routes/_neo'
 import { Route as NeoIndexRouteImport } from './routes/_neo/index'
 import { Route as StudioStudioRouteImport } from './routes/_studio/studio'
+import { Route as NeoProjectsIndexRouteImport } from './routes/_neo/projects/index'
 
 const StudioRoute = StudioRouteImport.update({
   id: '/_studio',
@@ -32,14 +33,21 @@ const StudioStudioRoute = StudioStudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => StudioRoute,
 } as any)
+const NeoProjectsIndexRoute = NeoProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => NeoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/studio': typeof StudioStudioRoute
   '/': typeof NeoIndexRoute
+  '/projects': typeof NeoProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/studio': typeof StudioStudioRoute
   '/': typeof NeoIndexRoute
+  '/projects': typeof NeoProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -47,13 +55,20 @@ export interface FileRoutesById {
   '/_studio': typeof StudioRouteWithChildren
   '/_studio/studio': typeof StudioStudioRoute
   '/_neo/': typeof NeoIndexRoute
+  '/_neo/projects/': typeof NeoProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/studio' | '/'
+  fullPaths: '/studio' | '/' | '/projects'
   fileRoutesByTo: FileRoutesByTo
-  to: '/studio' | '/'
-  id: '__root__' | '/_neo' | '/_studio' | '/_studio/studio' | '/_neo/'
+  to: '/studio' | '/' | '/projects'
+  id:
+    | '__root__'
+    | '/_neo'
+    | '/_studio'
+    | '/_studio/studio'
+    | '/_neo/'
+    | '/_neo/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,15 +106,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioStudioRouteImport
       parentRoute: typeof StudioRoute
     }
+    '/_neo/projects/': {
+      id: '/_neo/projects/'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof NeoProjectsIndexRouteImport
+      parentRoute: typeof NeoRoute
+    }
   }
 }
 
 interface NeoRouteChildren {
   NeoIndexRoute: typeof NeoIndexRoute
+  NeoProjectsIndexRoute: typeof NeoProjectsIndexRoute
 }
 
 const NeoRouteChildren: NeoRouteChildren = {
   NeoIndexRoute: NeoIndexRoute,
+  NeoProjectsIndexRoute: NeoProjectsIndexRoute,
 }
 
 const NeoRouteWithChildren = NeoRoute._addFileChildren(NeoRouteChildren)

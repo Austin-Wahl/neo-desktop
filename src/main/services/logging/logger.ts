@@ -73,7 +73,6 @@ const log = async (loggingObject: LoggingObject): Promise<boolean> => {
     }
 
     const logMessage = `${[logTime, logLevel, logProcess].join(' ')} ${msg}\n`
-    console.log(logFilePath)
     // Write the message to the log
     fs.appendFile(logFilePath!, logMessage, 'utf8')
     return true

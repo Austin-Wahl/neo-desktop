@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { getPreference, getSystemTheme, setPreference, UserPreferences } from './store'
@@ -234,4 +234,50 @@ ipcMain.handle(
 
 ipcMain.handle('get-system-theme', () => {
   return getSystemTheme()
+})
+
+type Path =
+  | 'home'
+  | 'appData'
+  | 'userData'
+  | 'sessionData'
+  | 'temp'
+  | 'exe'
+  | 'module'
+  | 'desktop'
+  | 'documents'
+  | 'downloads'
+  | 'music'
+  | 'pictures'
+  | 'videos'
+  | 'recent'
+  | 'logs'
+  | 'crashDumps'
+
+ipcMain.handle('getPath', (_event, name: Path) => {
+  return app.getPath(name)
+})
+
+type PropertiesForDialog =
+  | 'openFile'
+  | 'openDirectory'
+  | 'multiSelections'
+  | 'showHiddenFiles'
+  | 'createDirectory'
+  | 'promptToCreate'
+  | 'noResolveAliases'
+  | 'treatPackageAsDirectory'
+  | 'dontAddToRecent'
+
+ipcMain.handle('select-directory', async (_event, operation: 'export' | 'import') => {
+  const properties: PropertiesForDialog[] =
+    operation === 'export' ? ['openDirectory', 'createDirectory'] : ['openDirectory']
+  const result = await dialog.showOpenDialog({
+    properties: properties
+  })
+  if (result.canceled) {
+    return null
+  } else {
+    return result.filePaths[0]
+  }
 })

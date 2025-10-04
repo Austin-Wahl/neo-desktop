@@ -22,7 +22,7 @@ const items = [
   },
   {
     title: 'Projects',
-    url: '/Projects',
+    url: '/projects',
     icon: PaintRoller
   },
   {

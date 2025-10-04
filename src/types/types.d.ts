@@ -26,3 +26,13 @@ export interface NeoQueryServerResponse {
   result: NeoQueryResponse
   queryId: string
 }
+
+export type Project = {
+  id: string
+  color: string
+  name: string
+  directory: string
+  numOfConnections: number
+  createdAt: string
+  updatedAt: string
+}

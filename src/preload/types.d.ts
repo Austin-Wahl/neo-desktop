@@ -1,4 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { UserPreferences } from '@src/main/store'
 import { LoggingObject } from '@src/types/logging'
 import { createDatabaseConnectionSchema } from '@src/validation-schemas/connection'
 import z from 'zod'
@@ -51,4 +52,28 @@ export interface ElectronCustomAPI {
           message: string
         }
   ) => Promise<void>
+  writeTextToClipboard: (text: string) => void
+  readTextFromClipboard: () => string
+  showItemInFolder: (directory: string) => boolean
+  getPath: (
+    path:
+      | 'home'
+      | 'appData'
+      | 'userData'
+      | 'sessionData'
+      | 'temp'
+      | 'exe'
+      | 'module'
+      | 'desktop'
+      | 'documents'
+      | 'downloads'
+      | 'music'
+      | 'pictures'
+      | 'videos'
+      | 'recent'
+      | 'logs'
+      | 'crashDumps'
+  ) => Promise<string>
+  selectDirectory: (operation: 'export' | 'import') => Promise<string | null>
+  doesDirectoryOrFileExist: (path: string | null) => boolean
 }

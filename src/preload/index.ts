@@ -1,10 +1,10 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import { createDatabaseConnectionSchema } from '@src/validation-schemas/connection'
-import { contextBridge, ipcRenderer, shell } from 'electron'
+import { app, clipboard, contextBridge, ipcRenderer, shell } from 'electron'
 import z from 'zod'
 import { ElectronCustomAPI, NeoAPI } from './types'
 import { LoggingObject } from '@src/types/logging'
-
+import fs from 'fs'
 // Custom APIs for renderer
 const api: ElectronCustomAPI = {
   minimize: () => ipcRenderer.send('window:minimize'),
@@ -32,6 +32,29 @@ const api: ElectronCustomAPI = {
   },
   log: async (logObject: Omit<LoggingObject, 'process'>) => {
     ipcRenderer.invoke('log', logObject)
+  },
+  writeTextToClipboard: (text) => {
+    clipboard.writeText(text)
+  },
+  readTextFromClipboard: () => {
+    return clipboard.readText()
+  },
+  showItemInFolder: (dir) => {
+    if (fs.existsSync(dir)) {
+      shell.showItemInFolder(dir)
+      return true
+    }
+    return false
+  },
+  getPath: async (name) => {
+    return await ipcRenderer.invoke('getPath', name)
+  },
+  selectDirectory: async (operation) => {
+    return await ipcRenderer.invoke('select-directory', operation)
+  },
+  doesDirectoryOrFileExist: (path) => {
+    if (path === null) return false
+    return fs.existsSync(path)
   }
 }
 

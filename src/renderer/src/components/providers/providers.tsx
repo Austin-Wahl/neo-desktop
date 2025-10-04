@@ -1,20 +1,9 @@
+import UtilsProvider from '@renderer/components/providers/utils-provider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools as ReactQueryDevtoolsBase } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 import { SidebarProvider } from '../ui/sidebar'
 import { Toaster } from '../ui/sonner'
-import UtilsProvider from '@renderer/components/providers/utils-provider'
-// https://tanstack.com/router/v1/docs/framework/react/devtools
-const TanStackRouterDevtools = import.meta.env.PROD
-  ? () => null
-  : React.lazy(() =>
-      import('@tanstack/router-devtools').then((res) => ({
-        default: res.TanStackRouterDevtools
-      }))
-    )
-
-const ReactQueryDevtools = import.meta.env.PROD ? () => null : ReactQueryDevtoolsBase
 
 const queryClient = new QueryClient()
 

@@ -15,8 +15,6 @@ const store = new Store<UserPreferences>({
   defaults: defaultPreferences
 })
 
-console.log(store)
-
 // Function to get a preference
 function getPreference<K extends keyof UserPreferences>(key: K): UserPreferences[K] {
   return store.get(key) as UserPreferences[K]
